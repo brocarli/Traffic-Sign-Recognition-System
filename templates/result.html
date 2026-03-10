@@ -1,0 +1,112 @@
+{% extends "base.html" %}
+
+{% block title %}Result – {{ result.label }} | TrafficAI{% endblock %}
+
+{% block content %}
+<section class="result-section">
+    <div class="container">
+        <div class="result-header">
+            <a href="{{ url_for('main.index') }}" class="back-link">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M19 12H5M12 19l-7-7 7-7"/>
+                </svg>
+                Analyze Another
+            </a>
+            <h1 class="result-title">Detection Result</h1>
+        </div>
+
+        <div class="result-grid">
+            <!-- Image Card -->
+            <div class="result-image-card">
+                <div class="result-image-wrapper">
+                    <img src="{{ image_url }}" alt="Uploaded traffic sign" class="result-image">
+                    <div class="result-image-overlay">
+                        <span class="overlay-label">Analyzed Image</span>
+                    </div>
+                </div>
+                <p class="result-filename">{{ filename }}</p>
+            </div>
+
+            <!-- Prediction Card -->
+            <div class="result-prediction-card">
+                <div class="prediction-main">
+                    <div class="prediction-badge {% if result.is_confident %}confident{% else %}uncertain{% endif %}">
+                        {% if result.is_confident %}
+                            <span>✅ High Confidence</span>
+                        {% else %}
+                            <span>⚠️ Low Confidence</span>
+                        {% endif %}
+                    </div>
+
+                    <div class="prediction-label-block">
+                        <p class="prediction-category">Detected Sign</p>
+                        <h2 class="prediction-label">{{ result.label }}</h2>
+                        <p class="prediction-class">Class: <code>{{ result.predicted_class }}</code></p>
+                    </div>
+
+                    <div class="confidence-display">
+                        <div class="confidence-header">
+                            <span class="confidence-title">Confidence</span>
+                            <span class="confidence-value">{{ result.confidence }}%</span>
+                        </div>
+                        <div class="confidence-bar-track">
+                            <div class="confidence-bar-fill {% if result.confidence >= 70 %}high{% elif result.confidence >= 40 %}medium{% else %}low{% endif %}"
+                                 style="width: {{ result.confidence }}%">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Top 5 Predictions -->
+                <div class="top5-section">
+                    <h3 class="top5-title">Top 5 Predictions</h3>
+                    <div class="top5-list">
+                        {% for pred in result.top5 %}
+                        <div class="top5-item {% if loop.index == 1 %}top5-first{% endif %}">
+                            <div class="top5-rank">{{ loop.index }}</div>
+                            <div class="top5-info">
+                                <span class="top5-label">{{ pred.label }}</span>
+                                <span class="top5-class">{{ pred.class }}</span>
+                            </div>
+                            <div class="top5-bar-wrap">
+                                <div class="top5-bar">
+                                    <div class="top5-fill {% if loop.index == 1 %}top5-fill-first{% endif %}"
+                                         style="width: {{ pred.confidence }}%"></div>
+                                </div>
+                                <span class="top5-pct">{{ pred.confidence }}%</span>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <div class="result-actions">
+                    <a href="{{ url_for('main.index') }}" class="btn-action btn-primary">
+                        Try Another Image
+                    </a>
+                    <a href="{{ url_for('main.model_info') }}" class="btn-action btn-secondary">
+                        Model Details
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Animate confidence bar on load
+window.addEventListener('load', () => {
+    const fills = document.querySelectorAll('.confidence-bar-fill, .top5-fill');
+    fills.forEach(fill => {
+        const targetWidth = fill.style.width;
+        fill.style.width = '0%';
+        setTimeout(() => {
+            fill.style.transition = 'width 1s cubic-bezier(0.4, 0, 0.2, 1)';
+            fill.style.width = targetWidth;
+        }, 200);
+    });
+});
+</script>
+{% endblock %}

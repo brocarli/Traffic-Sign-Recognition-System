@@ -1,0 +1,53 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+.venv/
+*.egg-info/
+dist/
+build/
+
+# Environment
+.env
+*.env
+
+# Model files (large - download separately)
+model/*.h5
+model/*.keras
+model/*.pkl
+model/training_history.json
+
+# Dataset (large - use your own)
+dataset/*/
+!dataset/.gitkeep
+
+# Uploads
+static/uploads/*
+!static/uploads/.gitkeep
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb_checkpoints
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Logs
+*.log
+logs/
+
+# Coverage
+.coverage
+htmlcov/

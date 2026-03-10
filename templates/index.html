@@ -1,0 +1,215 @@
+{% extends "base.html" %}
+
+{% block title %}Traffic Sign Recognition AI – Upload & Detect{% endblock %}
+
+{% block content %}
+<section class="hero">
+    <div class="hero-bg">
+        <div class="hero-grid"></div>
+        <div class="hero-glow"></div>
+    </div>
+    <div class="hero-content">
+        <h1 class="hero-title">
+            Traffic Sign<br>
+            <span class="hero-title-accent">Recognition</span>
+        </h1>
+        <p class="hero-subtitle">
+            Upload a traffic sign image and our convolutional neural network 
+            will identify it from 53 different sign categories in real-time.
+        </p>
+    </div>
+</section>
+
+<section class="upload-section">
+    <div class="container">
+        <div class="upload-card">
+            <div class="upload-header">
+                <h2 class="section-title">Upload a Traffic Sign</h2>
+                <p class="section-subtitle">Supports PNG, JPG, JPEG, GIF, BMP, WEBP — max 16MB</p>
+            </div>
+
+            <form id="uploadForm" action="{{ url_for('main.predict') }}" method="POST" enctype="multipart/form-data">
+                <div class="dropzone" id="dropzone">
+                    <div class="dropzone-inner" id="dropzoneInner">
+                        <div class="dropzone-icon">
+                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                                <polyline points="17 8 12 3 7 8"/>
+                                <line x1="12" y1="3" x2="12" y2="15"/>
+                            </svg>
+                        </div>
+                        <p class="dropzone-text">Drag &amp; drop your image here</p>
+                        <p class="dropzone-sub">or click to browse files</p>
+                        <div class="dropzone-preview" id="dropzonePreview" style="display:none;">
+                            <img id="previewImg" src="" alt="Preview"/>
+                            <p id="previewName" class="preview-name"></p>
+                        </div>
+                    </div>
+                    <input type="file" id="fileInput" name="file" accept="image/*" class="file-input" required>
+                </div>
+
+                <div id="uploadError" class="upload-error" style="display:none;"></div>
+
+                <button type="submit" class="btn-predict" id="submitBtn" disabled>
+                    <span class="btn-text">Analyze Sign</span>
+                    <span class="btn-loading" style="display:none;">
+                        <span class="spinner"></span>
+                        Analyzing...
+                    </span>
+                    <svg class="btn-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="11" cy="11" r="8"/>
+                        <path d="m21 21-4.35-4.35"/>
+                    </svg>
+                </button>
+            </form>
+        </div>
+
+        <div class="classes-section">
+            <h3 class="classes-title">Detectable Signs</h3>
+            <div class="classes-grid">
+                <div class="class-tag">🚲 Bike Crossing</div>
+                <div class="class-tag">🧒 Children Zone</div>
+                <div class="class-tag">🦌 Deer Warning</div>
+                <div class="class-tag">✅ End Restrictions</div>
+                <div class="class-tag">⚠️ Intersection Warning</div>
+                <div class="class-tag">⬅️ Keep Left</div>
+                <div class="class-tag">➡️ Keep Right</div>
+                <div class="class-tag">🛣️ Narrow Road</div>
+                <div class="class-tag">⛔ No Entry</div>
+                <div class="class-tag">🔇 No Honking</div>
+                <div class="class-tag">↩️ No Left Turn</div>
+                <div class="class-tag">🚫 No Overtaking</div>
+                <div class="class-tag">🚛 No Overtaking (Trucks)</div>
+                <div class="class-tag">↪️ No Right Turn</div>
+                <div class="class-tag">🚷 No Stopping</div>
+                <div class="class-tag">⬆️ No Straight Ahead</div>
+                <div class="class-tag">〰️ No Swerving</div>
+                <div class="class-tag">🚚 No Trucks</div>
+                <div class="class-tag">🔄 No Turning</div>
+                <div class="class-tag">🔃 No U-Turn</div>
+                <div class="class-tag">🚗 No Vehicles</div>
+                <div class="class-tag">🚶 Pedestrian Crossing</div>
+                <div class="class-tag">🔨 Road Work</div>
+                <div class="class-tag">🔵 Roundabout Warning</div>
+                <div class="class-tag">🌊 Slippery Road</div>
+                <div class="class-tag">❄️ Snow Warning</div>
+                <div class="class-tag">🔢 Speed Limit 5</div>
+                <div class="class-tag">🔢 Speed Limit 15</div>
+                <div class="class-tag">🔢 Speed Limit 20</div>
+                <div class="class-tag">🔢 Speed Limit 30</div>
+                <div class="class-tag">🔢 Speed Limit 40</div>
+                <div class="class-tag">🔢 Speed Limit 50</div>
+                <div class="class-tag">🔢 Speed Limit 60</div>
+                <div class="class-tag">🔢 Speed Limit 70</div>
+                <div class="class-tag">🔢 Speed Limit 80</div>
+                <div class="class-tag">🔢 Speed Limit 100</div>
+                <div class="class-tag">🔢 Speed Limit 120</div>
+                <div class="class-tag">📉 Steep Downhill</div>
+                <div class="class-tag">📈 Steep Uphill</div>
+                <div class="class-tag">🛑 Stop</div>
+                <div class="class-tag">⬆️ Straight Ahead Only</div>
+                <div class="class-tag">↖️ Straight or Left Only</div>
+                <div class="class-tag">↗️ Straight or Right Only</div>
+                <div class="class-tag">🚦 Traffic Light Ahead</div>
+                <div class="class-tag">↰ Turn Left (Mandatory)</div>
+                <div class="class-tag">↩️ Turn Mandatory</div>
+                <div class="class-tag">↱ Turn Right (Mandatory)</div>
+                <div class="class-tag">🛤️ Uneven Road</div>
+                <div class="class-tag">⚠️ General Warning</div>
+                <div class="class-tag">⚠️ Warning: Left Turn</div>
+                <div class="class-tag">⚠️ Warning: Right Turn</div>
+                <div class="class-tag">⚠️ Warning: Winding Road</div>
+                <div class="class-tag">🔻 Yield</div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Dropzone functionality
+const dropzone = document.getElementById('dropzone');
+const fileInput = document.getElementById('fileInput');
+const submitBtn = document.getElementById('submitBtn');
+const dropzoneInner = document.getElementById('dropzoneInner');
+const dropzonePreview = document.getElementById('dropzonePreview');
+const previewImg = document.getElementById('previewImg');
+const previewName = document.getElementById('previewName');
+const uploadError = document.getElementById('uploadError');
+const uploadForm = document.getElementById('uploadForm');
+
+dropzone.addEventListener('click', (e) => {
+    // Don't re-trigger if the click came from the file input itself
+    if (e.target === fileInput) return;
+    fileInput.click();
+});
+
+dropzone.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    dropzone.classList.add('drag-over');
+});
+
+dropzone.addEventListener('dragleave', () => {
+    dropzone.classList.remove('drag-over');
+});
+
+dropzone.addEventListener('drop', (e) => {
+    e.preventDefault();
+    dropzone.classList.remove('drag-over');
+    const files = e.dataTransfer.files;
+    if (files.length > 0) handleFile(files[0]);
+});
+
+fileInput.addEventListener('change', () => {
+    if (fileInput.files.length > 0) handleFile(fileInput.files[0]);
+});
+
+function handleFile(file) {
+    const allowed = ['image/png','image/jpeg','image/gif','image/bmp','image/webp'];
+    if (!allowed.includes(file.type)) {
+        showError('Invalid file type. Please upload an image (PNG, JPG, GIF, BMP, WEBP).');
+        return;
+    }
+    if (file.size > 16 * 1024 * 1024) {
+        showError('File too large. Maximum size is 16MB.');
+        return;
+    }
+
+    hideError();
+    const reader = new FileReader();
+    reader.onload = (e) => {
+        previewImg.src = e.target.result;
+        previewName.textContent = file.name;
+        dropzonePreview.style.display = 'flex';
+        dropzoneInner.querySelector('.dropzone-icon').style.display = 'none';
+        dropzoneInner.querySelector('.dropzone-text').style.display = 'none';
+        dropzoneInner.querySelector('.dropzone-sub').style.display = 'none';
+        submitBtn.disabled = false;
+        submitBtn.classList.add('ready');
+    };
+    reader.readAsDataURL(file);
+
+    // Set file to input
+    const dt = new DataTransfer();
+    dt.items.add(file);
+    fileInput.files = dt.files;
+}
+
+function showError(msg) {
+    uploadError.textContent = msg;
+    uploadError.style.display = 'block';
+}
+
+function hideError() {
+    uploadError.style.display = 'none';
+}
+
+uploadForm.addEventListener('submit', () => {
+    submitBtn.querySelector('.btn-text').style.display = 'none';
+    submitBtn.querySelector('.btn-loading').style.display = 'inline-flex';
+    submitBtn.querySelector('.btn-icon').style.display = 'none';
+    submitBtn.disabled = true;
+});
+</script>
+{% endblock %}

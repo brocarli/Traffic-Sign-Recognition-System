@@ -1,0 +1,156 @@
+{% extends "base.html" %}
+
+{% block title %}Model Information | TrafficAI{% endblock %}
+
+{% block content %}
+<section class="info-section">
+    <div class="container">
+        <div class="page-header">
+            <h1 class="page-title">Model Information</h1>
+            <p class="page-subtitle">CNN architecture details and training performance metrics</p>
+        </div>
+
+        {% if info.status == 'ready' %}
+        <!-- Status Card -->
+        <div class="info-status-card">
+            <div class="status-indicator active">
+                <span class="status-dot"></span>
+                Model Ready
+            </div>
+            <div class="info-metrics">
+                {% if info.val_accuracy %}
+                <div class="metric-card">
+                    <span class="metric-value">{{ "%.1f"|format(info.val_accuracy * 100) }}%</span>
+                    <span class="metric-label">Validation Accuracy</span>
+                </div>
+                {% endif %}
+                <div class="metric-card">
+                    <span class="metric-value">{{ info.num_classes }}</span>
+                    <span class="metric-label">Sign Classes</span>
+                </div>
+                <div class="metric-card">
+                    <span class="metric-value">{{ info.img_size }}×{{ info.img_size }}</span>
+                    <span class="metric-label">Input Size</span>
+                </div>
+                {% if info.epochs_trained %}
+                <div class="metric-card">
+                    <span class="metric-value">{{ info.epochs_trained }}</span>
+                    <span class="metric-label">Epochs Trained</span>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        {% if info.trained_at %}
+        <p class="trained-at">Model trained on: <strong>{{ info.trained_at[:19].replace('T', ' ') }}</strong></p>
+        {% endif %}
+
+        {% else %}
+        <div class="info-status-card warning">
+            <div class="status-indicator inactive">
+                <span class="status-dot"></span>
+                Model Not Trained
+            </div>
+            <p class="warning-text">
+                The model has not been trained yet. Run <code>python train_model.py</code>
+                to train the CNN on your dataset.
+            </p>
+        </div>
+        {% endif %}
+
+        <!-- Architecture Section -->
+        <div class="arch-section">
+            <h2 class="section-title-sm">CNN Architecture</h2>
+            <div class="arch-diagram">
+                <div class="arch-stage input-stage">
+                    <div class="arch-label">Input</div>
+                    <div class="arch-block">{{ info.img_size if info.img_size else 64 }}×{{ info.img_size if info.img_size else 64 }}×3 RGB</div>
+                </div>
+                <div class="arch-arrow">→</div>
+                <div class="arch-stage">
+                    <div class="arch-label">Block 1</div>
+                    <div class="arch-block">Conv2D 32 + BN<br>Conv2D 32 + BN<br>MaxPool + Dropout</div>
+                </div>
+                <div class="arch-arrow">→</div>
+                <div class="arch-stage">
+                    <div class="arch-label">Block 2</div>
+                    <div class="arch-block">Conv2D 64 + BN<br>Conv2D 64 + BN<br>MaxPool + Dropout</div>
+                </div>
+                <div class="arch-arrow">→</div>
+                <div class="arch-stage">
+                    <div class="arch-label">Block 3</div>
+                    <div class="arch-block">Conv2D 128 + BN<br>Conv2D 128 + BN<br>MaxPool + Dropout</div>
+                </div>
+                <div class="arch-arrow">→</div>
+                <div class="arch-stage">
+                    <div class="arch-label">Head</div>
+                    <div class="arch-block">GlobalAvgPool<br>Dense 256 + BN<br>Dropout 50%</div>
+                </div>
+                <div class="arch-arrow">→</div>
+                <div class="arch-stage output-stage">
+                    <div class="arch-label">Output</div>
+                    <div class="arch-block">Dense {{ info.num_classes if info.num_classes else 53 }}<br>Softmax</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Training Charts -->
+        {% if info.status == 'ready' %}
+        <div class="charts-section">
+            <h2 class="section-title-sm">Training Visualizations</h2>
+            <div class="charts-grid">
+                <div class="chart-card">
+                    <h3 class="chart-title">Accuracy & Loss Curves</h3>
+                    <img src="{{ url_for('static', filename='img/training_history.png') }}"
+                         alt="Training history chart"
+                         class="chart-img"
+                         onerror="this.closest('.chart-card').innerHTML='<p class=chart-missing>Chart will appear after training</p>'">
+                </div>
+                <div class="chart-card">
+                    <h3 class="chart-title">Confusion Matrix</h3>
+                    <img src="{{ url_for('static', filename='img/confusion_matrix.png') }}"
+                         alt="Confusion matrix"
+                         class="chart-img"
+                         onerror="this.closest('.chart-card').innerHTML='<p class=chart-missing>Chart will appear after training</p>'">
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Training Config -->
+        <div class="config-section">
+            <h2 class="section-title-sm">Training Configuration</h2>
+            <div class="config-table">
+                <div class="config-row">
+                    <span class="config-key">Optimizer</span>
+                    <span class="config-val">Adam (lr=0.001)</span>
+                </div>
+                <div class="config-row">
+                    <span class="config-key">Loss Function</span>
+                    <span class="config-val">Categorical Cross-Entropy</span>
+                </div>
+                <div class="config-row">
+                    <span class="config-key">Batch Size</span>
+                    <span class="config-val">32</span>
+                </div>
+                <div class="config-row">
+                    <span class="config-key">Max Epochs</span>
+                    <span class="config-val">30 (with early stopping)</span>
+                </div>
+                <div class="config-row">
+                    <span class="config-key">Validation Split</span>
+                    <span class="config-val">20%</span>
+                </div>
+                <div class="config-row">
+                    <span class="config-key">Data Augmentation</span>
+                    <span class="config-val">Rotation, Shift, Zoom, Brightness</span>
+                </div>
+                <div class="config-row">
+                    <span class="config-key">Regularization</span>
+                    <span class="config-val">BatchNorm + Dropout</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
