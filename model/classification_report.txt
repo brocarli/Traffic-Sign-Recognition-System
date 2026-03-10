@@ -1,0 +1,63 @@
+Traffic Sign Recognition - Classification Report
+Generated: 2026-03-10 22:52:21
+Validation Accuracy: 99.23%
+
+                      precision    recall  f1-score   support
+
+       bike_crossing       0.98      0.97      0.98        63
+       children_zone       0.99      0.97      0.98       120
+        deer_warning       1.00      1.00      1.00       157
+    end_restrictions       1.00      1.00      1.00        48
+intersection_warning       1.00      0.96      0.98       264
+           keep_left       1.00      1.00      1.00        61
+          keep_right       0.99      1.00      1.00       440
+         narrow_road       0.98      1.00      0.99        55
+            no_entry       1.00      1.00      1.00       255
+          no_honking       0.96      1.00      0.98        27
+        no_left_turn       1.00      1.00      1.00        29
+       no_overtaking       1.00      1.00      1.00       295
+no_overtaking_trucks       1.00      1.00      1.00       403
+       no_right_turn       1.00      1.00      1.00         8
+         no_stopping       1.00      1.00      1.00        65
+   no_straight_ahead       1.00      1.00      1.00        15
+         no_swerving       1.00      1.00      1.00        25
+           no_trucks       1.00      1.00      1.00        85
+          no_turning       1.00      1.00      1.00        19
+            no_uturn       1.00      1.00      1.00         6
+         no_vehicles       1.00      0.98      0.99       127
+        ped_crossing       1.00      1.00      1.00        80
+           road_work       1.00      0.98      0.99       303
+  roundabout_warning       1.00      0.99      0.99        78
+       slippery_road       0.97      1.00      0.99       103
+        snow_warning       0.96      0.99      0.97        90
+     speed_limit_100       1.00      1.00      1.00       289
+     speed_limit_120       1.00      1.00      1.00       283
+      speed_limit_15       1.00      1.00      1.00         9
+      speed_limit_20       1.00      1.00      1.00        43
+      speed_limit_30       0.98      1.00      0.99       461
+      speed_limit_40       1.00      1.00      1.00        53
+       speed_limit_5       0.96      1.00      0.98        24
+      speed_limit_50       0.99      0.98      0.99       471
+      speed_limit_60       0.99      1.00      1.00       322
+      speed_limit_70       1.00      1.00      1.00       412
+      speed_limit_80       1.00      0.99      0.99       404
+          steep_down       1.00      1.00      1.00         6
+            steep_up       1.00      1.00      1.00         3
+                stop       1.00      1.00      1.00       157
+ straight_ahead_only       1.00      1.00      1.00       243
+  straight_left_only       1.00      1.00      1.00        43
+ straight_right_only       1.00      0.98      0.99        82
+ traffic_light_ahead       0.99      0.95      0.97       121
+ turn_left_mandatory       1.00      0.50      0.67         4
+      turn_mandatory       0.97      1.00      0.98        88
+turn_right_mandatory       1.00      1.00      1.00       159
+         uneven_road       1.00      1.00      1.00        79
+             warning       0.95      1.00      0.98       246
+   warning_left_turn       0.91      0.93      0.92        42
+  warning_right_turn       1.00      1.00      1.00        72
+warning_winding_road       0.96      1.00      0.98        70
+               yield       0.99      1.00      1.00       434
+
+            accuracy                           0.99      7841
+           macro avg       0.99      0.98      0.99      7841
+        weighted avg       0.99      0.99      0.99      7841
